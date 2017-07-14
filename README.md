@@ -1,9 +1,17 @@
 # read_weewx
 
-  NAME: read_weewxdata.py
+  NAME: 
+    - read_weewxdata.py
+    - read_weewxdata_p3.py
 
   PURPOSE:
     To read in data from a weewx.sdb file and plot selected variables.
+
+  VERSIONS:
+    - read_weewxdata.py is developed for python2. Known to work with Python 2.7.11
+        and Matplotlib 1.5.1
+    - read_weewxdata_p3.py is developed for python3. Known to work with Python 3.5.2
+        and Matplotlib 2.0.2
 
   CALLS:
     Built-in Python modules cycler, numpy, math, matplotlib/
