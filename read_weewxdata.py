@@ -8,8 +8,9 @@
     To read in data from a weewx.sdb file and plot selected variables.
 
   CALLS:
-    Built-in Python modules cycler, numpy, math, matplotlib/
-      matplotlib.pyplot/matplotlib.dates, time, sqlite3, and sys
+    - Python (known to work on Python version 2.7.11)
+    - Matplotlib (known to work on Matplotlib version 1.5.1)
+    - Built-in Python modules cycler, numpy, math, time, sqlite3, and sys
 
   MODIFICATIONS:
     - Andrea Neumann <andrea.neumann2@gmail.com> 10 July 2017: Written
@@ -20,7 +21,12 @@
     - Andrea Neumann <andrea.neumann2@gmail.com> 13 July 2017: Added much of the
         module header information, started working on adding plotting on a second
         y-axis capability, and added another color cycle for the second y-axis 
-        variables.
+        variables. Moved the second y-axis variable(s) legend to the top of the 
+        figure and set a whitespace padding around the figure in order for the 
+        legend to show if there are second y-axis variables present.
+    - Andrea Neumann <andrea.neumann2@gmail.com> 14 July 2017: Added notes on
+        which version of Python and Matplotlib this module was developed and
+        tested on.
 
   USAGE:
     [python] read_weewxdata.py inputfile=inputfile start=date/time1 end=date/time2 plot_var="var1","var2",...,"varn" [--verbose] [--view_request_time] [debug=0|1] [verbose=0|1] [plot_var2="var1","var2",...,"varn"] 
@@ -129,6 +135,7 @@
       'Rain4Day'
 
   NOTES:
+    - This module was developed and successfully tested on Python 2.7.11 and Matplotlib 1.5.1
     - Made use of online sample code from http://zetcode.com/db/sqlitepythontutorial/ 
       and https://groups.google.com/forum/#!msg/weewx-user/Plw2MjoV8NY/wz1XH45XDwAJ
     - Weather Data order help came from: http://sospilot.readthedocs.io/en/latest/weatherstation.html
@@ -541,7 +548,9 @@ if (plot_var2 != []):
   # Add in second-axis variables, if desired.
   mpl.rcParams['axes.prop_cycle'] = cycler('color', ['black', 'gray', 'firebrick', 'chartreuse', \
                                     'royalblue', 'mediumvioletred'])
+  # Clone the x-axis
   ax2 = ax.twinx()
+  # Loop through all the variables in plot_var2 list.
   for var in plot_var2:
     # Check to make sure the variable is included in the dictionary and correctly spelled
     if (var in WxStationData.keys()):
@@ -576,10 +585,9 @@ if (plot_var2 != []):
   elif plot_var[0] in WxStationDailyData["variablelist"]:
     aunit = WxStationDailyData["unitslist"][WxStationDailyData["variablelist"].index(plot_var2[0])]
     ax2.set_.ylabel(plot_var2[0] + " [" + aunit + "]")
-    ##ax2.set_.ylabel(plot_var2[0] + " [" + WxStationDailyData["unitslist"][WxStationDailyData["variablelist"].index(plot_var2[0])] + "]")
 
   # Add a legend to the plot.
-  plt.legend(bbox_to_anchor=(1.0,0.15), ncol=4, fontsize=10, frameon=False, handletextpad=0.1)
+  plt.legend(bbox_to_anchor=(1.0,1.20), ncol=4, fontsize=10, frameon=False, handletextpad=0.1)
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # If the user requests to see the whole time period regardless of data availability, 
@@ -602,14 +610,12 @@ elif ((dtime_hours > 48.0) and (dtime_hours <= 168.0)):
   ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
 # If have between 1 to 2 weeks.
 elif ((dtime_hours > 168.0) and (dtime_hours <= 336.0)):
-##elif ((dtime_hours > 168.0) and (dtime_hours <= 200.0)):
   # Format the view of the x-axis major and minor ticks.
   ax.xaxis.set_major_locator(mdates.DayLocator(np.arange(0,32,2)))
   ax.xaxis.set_minor_locator(mdates.HourLocator(np.arange(0, 25, 12)))
   ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
 # If have between 2 weeks and a month.
 elif ((dtime_hours > 336.0) and (dtime_hours <= 744.0)):
-##elif ((dtime_hours > 200.0) and (dtime_hours <= 744.0)):
   # Format the view of the x-axis major and minor ticks.
   ax.xaxis.set_major_locator(mdates.DayLocator(np.arange(0,32,7)))
   ax.xaxis.set_minor_locator(mdates.DayLocator())
@@ -626,8 +632,12 @@ ax.tick_params('both', which='major', length=10, width=1)
 ax.tick_params('both', which='minor', length=5, width=1)
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Configure the margins so everything is visible
-plt.tight_layout()
+# Configure the margins so everything is visible. If have a second y-axis, give a 
+# little extra space around the figure so that the legends are visible
+if (len(plot_var2) > 0):
+  plt.tight_layout(pad=2.0)
+else:
+  plt.tight_layout()
 
 # Get script end time (not counting plot viewing time)
 sendtime = time.time()
