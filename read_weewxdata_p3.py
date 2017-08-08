@@ -25,6 +25,8 @@
         legend to show if there are second y-axis variables present.
     - Andrea Neumann <andrea.neumann2@gmail.com> 14 July 2017: Converted module to 
         work in Python3.
+    - Andrea Neumann <andrea.neumann2@gmail.com> 8 August 2017: Fixed typo in setting
+        y-axis title in the bar graph.
 
   USAGE:
     [python3] read_weewxdata.py inputfile=inputfile start=date/time1 end=date/time2 plot_var="var1","var2",...,"varn" [--verbose] [--view_request_time] [debug=0|1] [verbose=0|1] [plot_var2="var1","var2",...,"varn"] 
