@@ -541,7 +541,7 @@ ax.set_xlabel("Time (Starting time= {0})".format(time.strftime("%Y-%m-%d %H:%M:%
 if plot_var[0] in WxStationData["variablelist"]:
   ax.set_ylabel(plot_var[0] + " [" + WxStationData["unitslist"][WxStationData["variablelist"].index(plot_var[0])] + "]")
 elif plot_var[0] in WxStationDailyData["variablelist"]:
-  ax.set_.ylabel(plot_var[0] + " [" + WxStationDailyData["unitslist"][WxStationDailyData["variablelist"].index(plot_var[0])] + "]")
+  ax.set_ylabel(plot_var[0] + " [" + WxStationDailyData["unitslist"][WxStationDailyData["variablelist"].index(plot_var[0])] + "]")
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if (plot_var2 != []):
